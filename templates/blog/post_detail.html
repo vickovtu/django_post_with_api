@@ -1,0 +1,92 @@
+{% extends '_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Detail{% endblock title %}
+{% block content %}
+    <h1>Post info</h1>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="img-thumbnail">
+                    <h3>{{ post.title }}</h3>
+                    <small style="float:right">{{ post.created }}</small><br>
+                    Author: {{ post.author }}<br>
+                    {{ post.body }}
+                </div>
+                <br>
+            </div>
+            <div id="like-section">{% include 'blog/like_section.html' %}</div>
+            <br>
+            <br>
+
+        </div>
+        {% if post.author == user %}
+            <div class="row">
+                <div class="edit-section cl-6">
+                    <a href="{% url 'post_edit' id=post.id %}">
+                        <button type="button" class="btn btn-outline-success">EDIT</button>
+                    </a>
+                </div>
+                <div class="edit-section">
+                    <a href="{% url 'post_delete' id=post.id %}">
+                        <button type="button" class="btn btn-outline-danger">DELETE</button>
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    <br>
+    <br>
+    <hr>
+    <div class="main-comment-section">
+        <div class="container-fluid mt-2 ml-1">
+            <div class="form-group row">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ comment_form|crispy }}
+                    {% if user.is_authenticated %}
+                        <input type="submit" value="submit" class="btn btn-outline-success">
+                    {% else %}
+                        <input type="submit" value="submit" class="btn btn-outline-success" disabled>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-comment-section ml-5">
+        {{ comments.count }} Comment{{ comments|pluralize }}
+        {% for comment in comments %}
+
+            <blockquote class="blockquote">
+                <p class="mb-0">{{ comment.content }}</p>
+                <footer class="blockquote-footer">at {{ comment.timestamp }} by <cite
+                        title="Source Title">{{ comment.user.username }}</cite>
+                </footer>
+            </blockquote>
+            {% for reply in comment.replies.all %}
+                <div class="ml-5">
+                <blockquote class="blockquote">
+                    <p class="mb-0"><small>{{ reply.content }}</small></p>
+                    <footer class="blockquote-footer"><small>at {{ reply.timestamp }} by </small><cite
+                            title="Source Title"><small>{{ reply.user.username }}</small></cite>
+                    </footer>
+                </blockquote>
+</div>
+            {% endfor %}
+            <div class="form-group row ml-4">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                    {{ comment_form|crispy }}
+                    {% if user.is_authenticated %}
+                        <input type="submit" value="add comment" class="btn btn-outline-success">
+                    {% else %}
+                        <input type="submit" value="add comment" class="btn btn-outline-success" disabled>
+                    {% endif %}
+                </form>
+            </div>
+
+        {% endfor %}
+    </div>
+{% endblock content %}

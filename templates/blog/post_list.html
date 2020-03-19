@@ -1,0 +1,67 @@
+{% extends '_base.html' %}
+
+{% block title %}POST LIST{% endblock title %}
+{% block content %}
+    <h1>ALL POSTS :</h1>
+    <div class="container-fluid">
+
+        <div class="messages">
+            {% if messages %}
+                {% for message in messages %}
+                    <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+
+
+        </div>
+
+
+        <div class="row">
+            {% for p in post %}
+                <div class="col-md-6">
+                    <div class="img-thumbnail">
+
+                        <a href="{{ p.get_absolute_url }}">{{ p.title }}</a>
+                        <small style="float:right">{{ p.created }}</small><br>
+                        Author: {{ p.author }}<br>
+                        {{ p.body }}
+                    </div>
+                    <br>
+                </div>
+            {% empty %}
+                <div class="container-fluid">
+                    <h3>No Posts found having search query "{{ request.GET.q }}"</h3>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <ul class="pagination">
+        {% if post.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ post.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% for p in page_range %}
+            {% if post.number == p %}
+                <li class="page-item active"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% else %}
+                <li class="page-item "><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if post.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ post.next_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+
+
+    </ul>
+{% endblock content %}

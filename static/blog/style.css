@@ -1,0 +1,29 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Lucida Casaul', 'Comic Sans MS';
+}
+
+.navbar-img {
+    width: 30px;
+    height: 25px;
+    float: left;
+    background-size: auto 100%;
+    margin-top: -5px;
+    margin-left: 5px;
+
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: #cccccc;
+    height: 130px;
+    background-color: #222222;
+
+}
